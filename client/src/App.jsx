@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import CoursesPage from "./pages/CouresPage";
 import CourseDetailPage from './pages/CourseDetailPage';
+import PlayerPage from "./pages/PlayerPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:id" element={<CourseDetailPage />} />
+        <Route path="/player/:id" element={<PlayerPage />} />
       </Routes>
     </BrowserRouter>
   );

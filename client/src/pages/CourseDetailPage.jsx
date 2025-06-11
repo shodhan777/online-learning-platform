@@ -1,47 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
 const CourseDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isEnrolled, setIsEnrolled] = useState(false);
 
   useEffect(() => {
     const fetchCourse = async () => {
+      const res = await api.get(`/courses/${id}`);
+      setCourse(res.data);
+      setLoading(false);
       try {
-        const res = await api.get(`/courses/${id}`);
-        setCourse(res.data);
-      } catch (err) {
-        console.error('Failed to fetch course:', err);
-      } finally {
-        setLoading(false);
-      }
+        const profile = await api.get('/auth/profile', { headers: { Authorization: localStorage.getItem('token') } });
+        setIsEnrolled(profile.data.enrolledCourses?.includes(id));
+      } catch {}
     };
-
     fetchCourse();
   }, [id]);
 
-  if (loading) return <p>Loading course...</p>;
-  if (!course) return <p>Course not found.</p>;
+  const enroll = async () => {
+    await api.post(`/enroll/${id}/enroll`, {}, { headers: { Authorization: localStorage.getItem('token') }});
+    setIsEnrolled(true);
+  };
 
+  if (loading) return <p>Loading...</p>;
   return (
-    <div style={{ padding: '20px' }}>
+    <div>
       <h1>{course.title}</h1>
       <p>{course.description}</p>
-      <p>Category: {course.category}</p>
-      <p>Level: {course.level}</p>
       <p>Price: ₹{course.price}</p>
-
-      <h3>Materials</h3>
-      <ul>
-        {course.materials.map((material, idx) => (
-          <li key={idx}><a href={material} target="_blank" rel="noopener noreferrer">Download Material</a></li>
-        ))}
-      </ul>
-
-      <h3>Video</h3>
-      <a href={course.videoURL} target="_blank" rel="noopener noreferrer">Watch Video</a>
+      {isEnrolled ? (
+        <button onClick={() => navigate(`/player/${id}`)}>Go to Course</button>
+      ) : (
+        <button onClick={enroll}>Enroll</button>
+      )}
     </div>
   );
 };
