@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../utils/api';
 
 const PlayerPage = () => {
   const { id } = useParams();
-  const videoRef = useRef();
-  const [progress, setProgress] = useState(0);
   const [course, setCourse] = useState(null);
+  const [progress, setProgress] = useState(null);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -15,21 +14,21 @@ const PlayerPage = () => {
     };
 
     const fetchProgress = async () => {
-      const res = await api.get(`/progress/${id}`);
-      setProgress(res.data.progress);
+      const res = await api.get(`/progress/${id}`, {
+        headers: { Authorization: localStorage.getItem('token') }
+      });
+      setProgress(res.data);
     };
 
     fetchCourse();
     fetchProgress();
   }, [id]);
 
-  const handleTimeUpdate = () => {
-    const currentProgress = (videoRef.current.currentTime / videoRef.current.duration) * 100;
-    setProgress(currentProgress);
-  };
-
-  const saveProgress = async () => {
-    await api.post(`/progress/${id}`, { progress });
+  const markWatched = async () => {
+    await api.post(`/progress/${id}/watched`, {}, {
+      headers: { Authorization: localStorage.getItem('token') }
+    });
+    setProgress({ watched: true });
   };
 
   if (!course) return <p>Loading...</p>;
@@ -37,15 +36,12 @@ const PlayerPage = () => {
   return (
     <div>
       <h1>{course.title}</h1>
-      <video
-        src={course.videoURL}
-        controls
-        ref={videoRef}
-        onTimeUpdate={handleTimeUpdate}
-        onPause={saveProgress}
-        style={{ width: '80%' }}
-      />
-      <p>Progress: {progress.toFixed(2)}%</p>
+      <video width="600" controls onEnded={markWatched}>
+        <source src={course.videoUrl} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {progress?.watched ? <p>✅ Watched</p> : <p>❌ Not Watched</p>}
     </div>
   );
 };

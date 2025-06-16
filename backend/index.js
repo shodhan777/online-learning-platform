@@ -27,3 +27,5 @@ app.use('/api/admin/courses', require('./routes/adminCourses'));
 
 const progressRoutes = require('./routes/progress');
 app.use('/api/progress', progressRoutes);
+
+app.use('/api/progress', require('./routes/progress'));
