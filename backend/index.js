@@ -22,3 +22,5 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 const enrollRoutes = require('./routes/enroll');
 app.use('/api/enroll', enrollRoutes);
+
+app.use('/api/admin/courses', require('./routes/adminCourses'));
