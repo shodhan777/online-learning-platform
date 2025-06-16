@@ -2,15 +2,11 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/lms', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-
+    await mongoose.connect('mongodb://localhost:27017/yourdbname');
     console.log('MongoDB Connected');
   } catch (err) {
     console.error(err.message);
-    process.exit(1); // Exit process with failure
+    process.exit(1);
   }
 };
 
