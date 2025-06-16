@@ -23,9 +23,15 @@ router.post('/:id/enroll', auth, async (req, res) => {
 
     await enrollment.save();
     res.json(enrollment);
+
+      const user = await User.findById(req.user.id);
+    user.enrolledCourses.push(req.params.id);
+    await user.save();
   } catch (err) {
     res.status(500).send('Server Error');
   }
+
+
 });
 
 // Get enrolled courses for user
