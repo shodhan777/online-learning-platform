@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Enrollment = require('../models/Enrollment');
 const Course = require('../models/Course');
+const User = require('../models/User'); // ✅ You forgot to import this
 const auth = require('../middleware/authMiddleware');
 
 // Enroll to course
@@ -20,27 +21,16 @@ router.post('/:id/enroll', auth, async (req, res) => {
       user: req.user.id,
       course: req.params.id
     });
-
     await enrollment.save();
-    res.json(enrollment);
 
-      const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id);
     user.enrolledCourses.push(req.params.id);
     await user.save();
+
+    return res.json(enrollment); // ✅ Send response after everything is done
   } catch (err) {
-    res.status(500).send('Server Error');
-  }
-
-
-});
-
-// Get enrolled courses for user
-router.get('/my-courses', auth, async (req, res) => {
-  try {
-    const enrollments = await Enrollment.find({ user: req.user.id }).populate('course');
-    res.json(enrollments);
-  } catch (err) {
-    res.status(500).send('Server Error');
+    console.error(err);
+    return res.status(500).send('Server Error');
   }
 });
 

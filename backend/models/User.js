@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
   courseProgress: [
     {
       course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
-      progress: Number
+      progress: Number,
     }
   ]
 }, { timestamps: true });
