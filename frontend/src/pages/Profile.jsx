@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate(); // for redirecting after logout
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     api.get('/auth/profile', {
@@ -12,14 +12,14 @@ const Profile = () => {
     }).then(res => setUser(res.data))
       .catch(err => {
         console.error(err);
-        // if token is invalid or expired
+       
         navigate('/login');
       });
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // clear the token
-    navigate('/login'); // redirect to login page
+    localStorage.removeItem('token'); 
+    navigate('/login'); 
   };
 
   if (!user) return <p>Loading...</p>;

@@ -25,7 +25,7 @@ const Reviews = ({ courseId }) => {
     setForm({ rating: '', comment: '' });
   };
 
-  // Calculate average rating
+
   const avgRating = reviews.length
     ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
     : 'No ratings yet';
@@ -34,10 +34,10 @@ const Reviews = ({ courseId }) => {
     <div>
       <h3>Course Reviews</h3>
 
-      {/* Average Rating */}
+     
       <p><strong>Average Rating:</strong> {avgRating} ⭐</p>
 
-      {/* Form */}
+     
       <input
         type="number"
         placeholder="Rating (1-5)"
@@ -54,7 +54,7 @@ const Reviews = ({ courseId }) => {
       />
       <button onClick={submitReview}>Submit</button>
 
-      {/* Reviews */}
+     
       {reviews.map((rev) => (
         <div key={rev._id}>
           <p><strong>{rev.user.name}</strong>: {rev.comment} ({rev.rating}⭐)</p>
