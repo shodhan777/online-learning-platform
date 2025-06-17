@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/authMiddleware');
 
-// Register
+
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
   let user = await User.findOne({ email });
@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
   res.json({ token });
 });
 
-// Login
+
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
   res.json({ token });
 });
 
-// Get Profile
+
 router.get('/profile', auth, (req, res) => {
   res.json(req.user);
 });

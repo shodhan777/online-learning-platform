@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const auth = require('../middleware/authMiddleware');
 
-// Save Progress
+
 router.post('/:courseId', auth, async (req, res) => {
   const { progress } = req.body;
   const { courseId } = req.params;
@@ -27,7 +27,7 @@ router.post('/:courseId', auth, async (req, res) => {
   }
 });
 
-// Get Progress
+
 router.get('/:courseId', auth, async (req, res) => {
   const { courseId } = req.params;
   try {

@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Enrollment = require('../models/Enrollment');
 const Course = require('../models/Course');
-const User = require('../models/User'); // ✅ You forgot to import this
+const User = require('../models/User'); 
 const auth = require('../middleware/authMiddleware');
 
-// Enroll to course
+
 router.post('/:id/enroll', auth, async (req, res) => {
   try {
     const alreadyEnrolled = await Enrollment.findOne({
@@ -27,7 +27,7 @@ router.post('/:id/enroll', auth, async (req, res) => {
     user.enrolledCourses.push(req.params.id);
     await user.save();
 
-    return res.json(enrollment); // ✅ Send response after everything is done
+    return res.json(enrollment); 
   } catch (err) {
     console.error(err);
     return res.status(500).send('Server Error');
