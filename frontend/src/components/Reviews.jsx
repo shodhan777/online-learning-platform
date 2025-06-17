@@ -16,6 +16,8 @@ const Reviews = ({ courseId }) => {
 
   const submitReview = async () => {
     const token = localStorage.getItem('token');
+    if (!form.rating || !form.comment) return alert('Fill both fields');
+
     await api.post(`/reviews/${courseId}`, form, {
       headers: { Authorization: token }
     });
@@ -23,14 +25,26 @@ const Reviews = ({ courseId }) => {
     setForm({ rating: '', comment: '' });
   };
 
+  // Calculate average rating
+  const avgRating = reviews.length
+    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
+    : 'No ratings yet';
+
   return (
     <div>
       <h3>Course Reviews</h3>
+
+      {/* Average Rating */}
+      <p><strong>Average Rating:</strong> {avgRating} ⭐</p>
+
+      {/* Form */}
       <input
         type="number"
         placeholder="Rating (1-5)"
         value={form.rating}
-        onChange={e => setForm({ ...form, rating: e.target.value })}
+        min="1"
+        max="5"
+        onChange={e => setForm({ ...form, rating: parseInt(e.target.value) })}
       />
       <input
         type="text"
@@ -40,9 +54,10 @@ const Reviews = ({ courseId }) => {
       />
       <button onClick={submitReview}>Submit</button>
 
+      {/* Reviews */}
       {reviews.map((rev) => (
         <div key={rev._id}>
-          <p><strong>{rev.user.name}</strong>: {rev.comment} ({rev.rating})</p>
+          <p><strong>{rev.user.name}</strong>: {rev.comment} ({rev.rating}⭐)</p>
         </div>
       ))}
     </div>
