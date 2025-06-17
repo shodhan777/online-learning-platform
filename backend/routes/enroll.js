@@ -34,4 +34,14 @@ router.post('/:id/enroll', auth, async (req, res) => {
   }
 });
 
+router.get('/mycourses', auth, async (req, res) => {
+  try {
+    const enrollments = await Enrollment.find({ user: req.user.id }).populate('course');
+    res.json(enrollments);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
