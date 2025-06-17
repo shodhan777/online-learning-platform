@@ -37,11 +37,23 @@ router.post('/:id/enroll', auth, async (req, res) => {
 router.get('/mycourses', auth, async (req, res) => {
   try {
     const enrollments = await Enrollment.find({ user: req.user.id }).populate('course');
-    res.json(enrollments);
+    const user = await User.findById(req.user.id);
+
+    const response = enrollments.map(enroll => {
+      const courseProgress = user.courseProgress.find(p => p.course.toString() === enroll.course._id.toString());
+      const progress = courseProgress ? courseProgress.progress : 0;
+
+      return {
+        _id: enroll._id,
+        course: enroll.course,
+        progress
+      };
+    });
+
+    res.json(response);
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
   }
 });
-
 module.exports = router;

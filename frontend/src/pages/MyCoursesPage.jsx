@@ -30,11 +30,15 @@ const MyCoursesPage = () => {
         <p>No courses enrolled yet.</p>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-          {courses.map((enroll) => (
-            <div key={enroll._id} style={{ border: '1px solid #ccc', padding: '16px', width: '300px' }}>
-              <h3>{enroll.course.title}</h3>
-              <p>{enroll.course.description}</p>
-              <button onClick={() => navigate(`/player/${enroll.course._id}`)}>Go to Course</button>
+          {courses.map(({ _id, course, progress }) => (
+            <div key={_id} style={{ border: '1px solid #ccc', padding: '16px', width: '300px' }}>
+              <h3>{course.title}</h3>
+              <p>{course.description}</p>
+              <p>Progress: {progress}%</p>
+              {progress === 100 && (
+                <p style={{ color: 'green', fontWeight: 'bold' }}>🎉 Completed</p>
+              )}
+              <button onClick={() => navigate(`/player/${course._id}`)}>Go to Course</button>
             </div>
           ))}
         </div>
