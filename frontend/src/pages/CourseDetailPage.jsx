@@ -24,7 +24,7 @@ const CourseDetailPage = () => {
           });
 
           const enrolledCourses = profileRes.data.enrolledCourses || [];
-// Convert ObjectIds to string before comparison
+
 const courseIds = enrolledCourses.map(course => course.toString());
 setIsEnrolled(courseIds.includes(id));
 

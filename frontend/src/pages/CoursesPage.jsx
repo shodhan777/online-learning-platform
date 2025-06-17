@@ -11,7 +11,7 @@ const CoursesPage = () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      navigate('/login'); // redirect if not logged in
+      navigate('/login'); 
       return;
     }
 
@@ -24,7 +24,7 @@ const CoursesPage = () => {
       })
       .catch(err => {
         console.error(err);
-        navigate('/login'); // redirect if token is invalid
+        navigate('/login'); 
       });
   }, [navigate]);
 

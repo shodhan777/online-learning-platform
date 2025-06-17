@@ -17,7 +17,7 @@ const PlayerPage = () => {
       const res = await api.get(`/progress/${id}`, {
         headers: { Authorization: localStorage.getItem('token') }
       });
-      setProgress(res.data.progress); // backend returns { progress: 0 or 100 }
+      setProgress(res.data.progress);
     };
 
     fetchCourse();
@@ -29,7 +29,7 @@ const PlayerPage = () => {
     try {
       await api.post(
         `/progress/${id}`,
-        { progress: 100 }, // mark complete
+        { progress: 100 }, 
         { headers: { Authorization: localStorage.getItem('token') } }
       );
       setProgress(100);
