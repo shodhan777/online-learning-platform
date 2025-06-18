@@ -41,24 +41,57 @@ setIsEnrolled(courseIds.includes(id));
     fetchCourseAndProfile();
   }, [id]);
 
-  const enroll = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Please login to enroll');
-        return;
-      }
-
-      await api.post(`/enroll/${id}/enroll`, {}, {
-        headers: { Authorization: token },
-      });
-
-      setIsEnrolled(true);
-    } catch (err) {
-      console.error(err);
-      alert('Enrollment failed');
+const enroll = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please login to enroll');
+      return;
     }
-  };
+
+   
+    const courseRes = await api.get(`/courses/${id}`);
+    const amount = courseRes.data.price;
+
+   
+    const orderRes = await api.post('/payment/create-order', { amount }, {
+      headers: { Authorization: token }
+    });
+
+    
+    const options = {
+      key: 'rzp_test_nfqETDk7Jq5c5y', 
+      amount: orderRes.data.amount,
+      currency: orderRes.data.currency,
+      name: 'Online Learning Platform',
+      description: `Enroll in ${courseRes.data.title}`,
+      order_id: orderRes.data.id,
+      handler: async function (response) {
+      
+        await api.post(`/enroll/${id}/enroll`, {}, {
+          headers: { Authorization: token }
+        });
+        setIsEnrolled(true);
+        alert('✅ Payment successful! You are enrolled.');
+      },
+      prefill: {
+        name: 'Shodhan',
+        email: 'shodhan700@example.com'
+      },
+      theme: {
+        color: '#3399cc'
+      }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error('❌ Payment failed:', err);
+    alert('Payment or Enrollment failed.');
+  }
+};
+
+
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;

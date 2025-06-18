@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
+
+require("dotenv").config();
+
 dotenv.config();
 connectDB();
 
@@ -29,3 +32,6 @@ const progressRoutes = require('./routes/progress');
 app.use('/api/progress', progressRoutes);
 
 app.use('/api/progress', require('./routes/progress'));
+
+const paymentRoutes = require('./routes/payment');
+app.use('/api/payment', paymentRoutes);
